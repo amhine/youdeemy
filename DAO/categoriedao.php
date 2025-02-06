@@ -1,5 +1,6 @@
 <?php
-include ''; 
+
+require_once("./app/libraries/database.php");
 
 class CategorieDAO {
 

@@ -1,6 +1,7 @@
 <?php
 
 
+require_once("./app/libraries/database.php");
 class Categorie {
 
     private $id_categorie;
