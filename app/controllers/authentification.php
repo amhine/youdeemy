@@ -22,47 +22,55 @@ class AuthController {
    
 
     public function signup() {
-        if ($_SERVER["REQUEST_METHOD"] != "POST") {
-            return "Aucune donnée reçue";
-        }
-    
-        $requiredFields = ['nom_user', 'email', 'password', 'role'];
-        foreach ($requiredFields as $field) {
-            if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
-                return "Le champ {$field} est obligatoire";
-            }
-        }
-    
-        $nom = $_POST['nom_user'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $role = $_POST['role'];
-    
-        if (!$email) {
-            return "Format d'email invalide";
-        }
-    
-        if (strlen($password) < 6) {
-            return "Le mot de passe doit contenir au moins 6 caractères";
-        }
-    
-        if (!preg_match("/^[a-zA-ZÀ-ÿ\s'-]+$/", $nom)) {
-            return "Le nom contient des caractères non autorisés";
-        }
-    
         try {
+            if ($_SERVER["REQUEST_METHOD"] != "POST") {
+                $_SESSION['error'] = "Aucune donnée reçue";
+                header('Location: /register');
+                exit();
+            }
+        
+            $requiredFields = ['nom_user', 'email', 'password', 'role'];
+            foreach ($requiredFields as $field) {
+                if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+                    $_SESSION['error'] = "Le champ {$field} est obligatoire";
+                    header('Location: /register');
+                    exit();
+                }
+            }
+        
+            $nom = trim($_POST['nom_user']);
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
+            $role = trim($_POST['role']);
+        
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['error'] = "Format d'email invalide";
+                header('Location: /register');
+                exit();
+            }
+        
+            if (strlen($password) < 6) {
+                $_SESSION['error'] = "Le mot de passe doit contenir au moins 6 caractères";
+                header('Location: /register');
+                exit();
+            }
+        
             $conn = $this->connect->getConnection();
             
             $email_query = $conn->prepare("SELECT id_user FROM utilisateur WHERE email = ?");
             $email_query->execute([$email]);
             if ($email_query->rowCount() > 0) {
-                return "Cet email existe déjà";
+                $_SESSION['error'] = "Cet email existe déjà";
+                header('Location: /register');
+                exit();
             }
     
             $role_query = $conn->prepare("SELECT id_role FROM role WHERE nom_role = ?");
             $role_query->execute([$role]);
             if ($role_query->rowCount() == 0) {
-                return "Rôle non valide";
+                $_SESSION['error'] = "Rôle non valide";
+                header('Location: /register');
+                exit();
             }
     
             $role_obj = $role_query->fetch(PDO::FETCH_OBJ);
@@ -77,18 +85,23 @@ class AuthController {
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
             
-            $stmt->execute([$nom, $email, $password_hash, $role_id, $date_creation, $status]);
+            $result = $stmt->execute([$nom, $email, $password_hash, $role_id, $date_creation, $status]);
             
-            if ($stmt->rowCount() > 0) {
-                header('Location: signin.php');
+            if ($result) {
+                $_SESSION['success'] = "Inscription réussie";
+                header('Location: /login');
                 exit();
             } else {
-                return "Erreur lors de l'inscription";
+                $_SESSION['error'] = "Erreur lors de l'inscription";
+                header('Location: /register');
+                exit();
             }
     
         } catch(PDOException $e) {
             error_log("Erreur d'inscription : " . $e->getMessage());
-            return "Une erreur est survenue lors de l'inscription. Veuillez réessayer.";
+            $_SESSION['error'] = "Une erreur est survenue lors de l'inscription";
+            header('Location: /register');
+            exit();
         }
     }
     public function showLoginForm() {
@@ -97,8 +110,11 @@ class AuthController {
     
     public function signin() {
         if ($_SERVER["REQUEST_METHOD"] != "POST") {
-            return "Aucune donnée reçue";
+            $_SESSION['error'] = "Aucune donnée reçue";
+            header('Location: /login');
+            exit();
         }
+       
    
         if (!isset($_POST['email'], $_POST['password'])) {
             return "Email et mot de passe requis";

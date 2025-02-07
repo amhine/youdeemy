@@ -1,7 +1,8 @@
 <?php
 
+require_once(__DIR__ . "/../libraries/database.php");
 
-require_once("./app/libraries/database.php");
+
 class Categorie {
 
     private $id_categorie;

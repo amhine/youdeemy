@@ -1,58 +1,23 @@
 <?php
-// require_once 'app/controllers/authentification.php';
-// require_once 'DAO/role.php'; 
-// require_once 'DAO/user.php';  
-
-// $authController = new AuthController();
-
-// $action = $_GET['action'] ?? 'index';
-
-// switch ($action) {
-//     case 'home':
-//         $authController->showRegistrationForm();
-//         break;
-//         case 'register':
-//             $authController->signup();
-//             break;
-//     case 'login':
-//         // $authController->signin();
-//         break;
-//     default:
-//         echo "Page non trouvée";
-//         break;
-// }
-?>
-<?php
 require_once 'app/controllers/authentification.php';
+require_once 'app/controllers/categorie.php';
 require_once 'DAO/role.php'; 
-require_once 'DAO/user.php';  
+require_once 'DAO/user.php'; 
+require_once __DIR__ . "/core/router.php";
+require_once __DIR__ . "/vendor/autoload.php";
 
-$authController = new AuthController();
+session_start();
 
-$action = $_GET['action'] ?? 'index';
+$router = new Rooter();
+$router->add('GET', '/login', 'AuthController', 'showLoginForm');
+$router->add('POST', '/login', 'AuthController', 'signin');
+$router->add('GET', '/register', 'AuthController', 'showRegistrationForm');
+$router->add('POST', '/register', 'AuthController', 'signup');
 
-switch ($action) {
-    case 'index':
-        $authController->showLoginForm();
-        break;
-    case 'home':
-        $authController->showRegistrationForm();
-        break;
-    case 'register':
-        $authController->signup();
-        break;
-    case 'signin':
-        $authController->showLoginForm();
-        break;
-    case 'login':
-        $authController->signin();
-        break;
-    case 'logout':
-        $authController->logout();
-        break;
+$router->add('GET', '/', 'CategorieController', 'index');
+$router->add('GET', '/edit-categorie', 'CategorieController', 'getModifier');
+$router->add('GET', '/edit-categorie/{id}', 'CategorieController', 'getModifier');
 
-    default:
-        echo "Page non trouvée";
-        break;
-}
-?>
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+$requestUri = $_SERVER['REQUEST_URI'];
+$router->dispatch($requestMethod, $requestUri);

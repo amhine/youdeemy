@@ -1,6 +1,8 @@
 <?php
 
-require_once("./app/libraries/database.php");
+require_once(__DIR__ . "/../app/libraries/database.php");
+require_once(__DIR__ . "/../app/Models/categorie.php");
+
 
 class CategorieDAO {
 
@@ -10,16 +12,37 @@ class CategorieDAO {
         $this->connect = (new Connexion())->getConnection();
     }
 
+    // public function getCategories() {
+    //     try {
+    //         $sql = "SELECT * FROM categorie";
+    //         $stmt = $this->connect->prepare($sql);
+    //         $stmt->execute();
+    //         return $stmt->fetchAll(PDO::FETCH_OBJ); 
+    //     } catch (PDOException $e) {
+    //         throw new Exception("Erreur lors de la récupération des catégories : " . $e->getMessage());
+    //     }
+    // }
     public function getCategories() {
         try {
             $sql = "SELECT * FROM categorie";
             $stmt = $this->connect->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_OBJ); 
+            $categories = [];
+            
+            while ($obj = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $categories[] = new Categorie(
+                    $obj->nom_categorie,
+                    $obj->description,
+                    $obj->id_categorie
+                );
+            }
+            
+            return $categories;
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la récupération des catégories : " . $e->getMessage());
         }
     }
+
 
     public function ajouterCategorie(Categorie $categorie) {
         try {

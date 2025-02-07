@@ -1,0 +1,17 @@
+{
+    "name": "youco/udemy",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "amhine",
+            "email": "nihadamhine@gmail.com"
+        }
+    ],
+    "require": {
+        "phroute/phroute": "^2.2"
+    }
+}

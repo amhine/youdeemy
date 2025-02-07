@@ -29,12 +29,12 @@ $roles = $role->getRole();
                 <h2 class="mt-6 text-3xl font-extrabold text-gray-800">Sign up</h2>
                 <p class="mt-2 text-sm text-gray-600">
                     Already have an account? 
-                    <a href="./login.php" class="font-medium text-gray-800 hover:text-gray-800">Log in here</a>
+                    <a href="/login" class="font-medium text-gray-800 hover:text-gray-800">Log in here</a>
                 </p>
             </div>
 
             <!-- Form -->
-            <form id="signupForm" action="index.php?action=register"  method="POST" class="mt-8 space-y-6">
+            <form id="signupForm" action="/register" method="POST" class="mt-8 space-y-6">
                 <div class="space-y-4">
                     <!-- Name -->
                     <div>

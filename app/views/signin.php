@@ -18,13 +18,13 @@
                 <h2 class="mt-6 text-3xl font-extrabold text--gray-800">log in</h2>
                 <p class="mt-2 text-sm text-gray-600">
                     dosen't have an account? 
-                    <a href="./index.php?action=home" class="font-medium text-gray-800 hover:text-gray-800">Sign up here</a>
+                    <a href="/register" class="font-medium text-gray-800 hover:text-gray-800">Sign up here</a>
                    
                 </p>
             </div>
 
             <!-- Form -->
-            <form action="./index.php?action=login" id="" method="POST" class="mt-8 space-y-6">
+            <form action="/login" id="" method="POST" class="mt-8 space-y-6">
                 <div class="space-y-4">
                     <!-- Email -->
                     <div>
