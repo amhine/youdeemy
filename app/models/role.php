@@ -11,7 +11,9 @@ class Role {
         $this->nom_role=$nom_role;
         $this->connect = (new Connexion())->getConnection();
     }
-    
+    public function getIdRole() {
+        return $this->id_role;
+    }
 
     public function getNomRole() {
         return $this->nom_role;
