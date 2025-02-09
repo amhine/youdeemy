@@ -22,8 +22,16 @@ $router->add('GET', '/attendre', 'AuthController', 'attendre');
 
 $router->add('GET', '/categorie', 'CategorieController', 'index');
 $router->add('GET', '/encategorie', 'CategorieController', 'encategorie');
-$router->add('GET', '/voircategorie/{id}', 'CategorieController', 'details');
+$router->add('GET', '/supprimercat/{id_categorie}', 'CategorieController', 'supprimerCategorie');
 $router->add('GET', '/edit-categorie/{id}', 'CategorieController', 'getModifier');
+
+$router->add('GET', '/ajoutercat', 'CategorieController', 'showAjoutForm');
+$router->add('POST', '/ajouterNouvelleCategorie', 'CategorieController', 'ajouterNouvelleCategorie');
+
+$router->add('GET', '/modifierCategorie/{id_categorie}', 'CategorieController', 'showModifForm');
+$router->add('POST', '/modifierCategorie/{id_categorie}', 'CategorieController', 'modifierCategorie');
+
+
 
 
 $router->add('GET', '/courses', 'CoursController', 'index');

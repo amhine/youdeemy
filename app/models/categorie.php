@@ -26,6 +26,9 @@ class Categorie {
     public function getIdCategorie() {
         return $this->id_categorie;
     }
+    public function setIdCategorie($id_categorie) {
+        $this->id_categorie = $id_categorie;
+    }
 
     public function setNom($nom_categorie) {
         $this->nom_categorie = $nom_categorie;

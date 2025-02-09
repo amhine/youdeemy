@@ -71,11 +71,7 @@
                             Modifier
                         </button>
                     </a>
-                    <a href="/inscription=<?php echo $coursItem->getIdCours(); ?>">
-                        <button class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700">
-                            Inscription
-                        </button>
-                    </a>
+                    
 
                     <!-- Bouton d'inscription -->
                     <a href="/supprimer/<?= $coursItem->getIdCours() ?>">

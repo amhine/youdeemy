@@ -62,20 +62,35 @@ class CategorieDAO {
     }
 
     public function updateCategorie(Categorie $categorie) {
-        try {
+       
             $sql = "UPDATE categorie 
-                    SET nom_categorie = :nom_categorie, 
-                        description = :description 
+                    SET nom_categorie = :nom_categorie,
+                        description = :description
                     WHERE id_categorie = :id_categorie";
+    
             $stmt = $this->connect->prepare($sql);
-            $stmt->bindParam(':id_categorie', $categorie->getIdCategorie());
-            $stmt->bindParam(':nom_categorie', $categorie->getNom());
-            $stmt->bindParam(':description', $categorie->getDescription());
-            $stmt->execute();
-
-        } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la mise à jour de la catégorie : " . $e->getMessage());
-        }
+    
+            // Récupération des valeurs
+            $id = $categorie->getIdCategorie();
+            $nom = $categorie->getNom();
+            $description = $categorie->getDescription();
+    
+            // Binding avec types PDO
+            $stmt->bindParam(':id_categorie', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':nom_categorie', $nom, PDO::PARAM_STR);
+            $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+    
+            // Exécution de la requête
+            $result = $stmt->execute();
+    
+            if (!$result) {
+                error_log("Erreur SQL : " . print_r($stmt->errorInfo(), true));
+                throw new Exception("Échec de la mise à jour de la catégorie");
+            }
+    
+            return $result;
+    
+       
     }
 
     public function getCategorieById($id_categorie) {
@@ -84,8 +99,14 @@ class CategorieDAO {
             $stmt = $this->connect->prepare($sql);
             $stmt->bindParam(':id_categorie', $id_categorie, PDO::PARAM_INT);
             $stmt->execute();
-
-            return $stmt->fetch(PDO::FETCH_OBJ); 
+            
+            $row = $stmt->fetch(PDO::FETCH_OBJ);
+            if ($row) {
+                $categorie = new Categorie($row->nom_categorie, $row->description);
+                $categorie->setIdCategorie($row->id_categorie);
+                return $categorie;
+            }
+            return null;
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la récupération de la catégorie : " . $e->getMessage());
         }
