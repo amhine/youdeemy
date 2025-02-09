@@ -110,41 +110,6 @@ class CategorieController {
         require_once './app/views/enseignent/modifiercategorie.php';
     }
     
-    public function modifierCategorie($id_categorie) {
-        if (!isset($_SESSION['id_user'])) {
-            header("Location: /signin");
-            exit;
-        }
-    
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $nom = trim($_POST['nom']);
-                $description = trim($_POST['description']);
-    
-                if (empty($nom) || empty($description)) {
-                    $_SESSION['error'] = "Tous les champs sont requis.";
-                    header("Location: /modifierCategorie/{$id_categorie}");
-                    exit;
-                }
-    
-                $categorie = new Categorie($nom, $description);
-                $categorie->setIdCategorie($id_categorie); 
-                $this->categorieDAO->updateCategorie($categorie);
-    
-                $_SESSION['success'] = "Catégorie modifiée avec succès.";
-                header("Location: /encategorie");
-                exit;
-    
-            } catch (Exception $e) {
-                $_SESSION['error'] = "Erreur lors de la modification : " . $e->getMessage();
-                header("Location: /modifierCategorie/{$id_categorie}");
-                exit;
-            }
-        }
-        
-        header("Location: /encategorie");
-        exit;
-    }
 
     
     
