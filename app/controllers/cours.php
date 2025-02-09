@@ -168,7 +168,21 @@ public function validerAjout() {
     header("Location: /encourses");
     exit;
 }
-
+public function deleteCours($id_cours) {
+    if (!isset($_SESSION['id_user'])) {
+        header("Location: index.php?action=signin");
+        exit;
+    }
+    $success = $this->coursDAO->deleteCours($id_cours);
+    if ($success) {
+        header("Location: /encourses");  
+        exit;
+    } else {
+        
+        echo "Erreur lors de la suppression du cours.";
+        exit;
+    }
+}
 
 public function showModifForm($id_cours) {
     try {
