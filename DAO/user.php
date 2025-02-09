@@ -71,6 +71,24 @@ class UserDAO {
             return "Erreur lors de la connexion: " . $e->getMessage();
         }
     }
+    public function estInscrit($id_user, $id_cours) {
+        $stmt = $this->connect->prepare("SELECT * FROM inscription WHERE id_user = :id_user AND id_cours = :id_cours");
+        $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindParam(':id_cours', $id_cours, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    public function inscrireAuCours($id_user, $id_cours) {
+        if ($this->estInscrit($id_user, $id_cours)) {
+            return false; // Déjà inscrit
+        }
+        $stmt = $this->connect->prepare("INSERT INTO inscription (id_user, id_cours) VALUES (:id_user, :id_cours)");
+        $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindParam(':id_cours', $id_cours, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
 }
 
 ?>

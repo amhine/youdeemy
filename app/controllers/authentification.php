@@ -107,6 +107,7 @@ class AuthController {
     public function showLoginForm() {
         require_once 'app/views/signin.php';
     }
+   
     
     public function signin() {
         if ($_SERVER["REQUEST_METHOD"] != "POST") {
@@ -114,72 +115,73 @@ class AuthController {
             header('Location: /login');
             exit();
         }
-       
-   
+    
         if (!isset($_POST['email'], $_POST['password'])) {
             return "Email et mot de passe requis";
         }
-   
+    
         $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
         $password = trim($_POST['password']);
-   
+    
         if (!$email) {
             return "Format d'email invalide";
         }
-   
+    
         try {
             $conn = $this->connect->getConnection();
-   
             $query = $conn->prepare("SELECT * FROM utilisateur WHERE email = ?");
             $query->execute([$email]);
-   
+    
             if ($query->rowCount() == 0) {
                 return "Email ou mot de passe incorrect";
             }
-   
+    
             $user = $query->fetch(PDO::FETCH_OBJ);
-   
+    
             if (!password_verify($password, $user->password)) {
                 return "Email ou mot de passe incorrect";
             }
-   
+    
             if ($user->status === 'inactif') {
-                return "Votre compte n'a pas encore été activé";
+                $_SESSION['message'] = "Votre compte est inactif, veuillez patienter.";
+                header('Location: /attendre');
+                exit();
             }
-   
-            session_start();
+    
             $_SESSION['id_user'] = $user->id_user;
             $_SESSION['nom_user'] = $user->nom_user;
             $_SESSION['id_role'] = $user->id_role;
-   
+    
             switch ($user->id_role) {
                 case 1:
-                    header('Location: admin_dashboard.php');
+                    header('Location: /dashbord');
                     break;
                 case 2:
-                    header('Location: student_dashboard.php');
+                    require_once  './app/views/etudient/home.php';
                     break;
                 case 3:
-                    header('Location: teacher_dashboard.php');
+                    require_once  './app/views/enseignent/home.php';
                     break;
                 default:
-                    header('Location: index.php');
+                    header('Location: /login');
                     break;
             }
-   
             exit();
-   
+    
         } catch(PDOException $e) {
             error_log("Erreur de connexion : " . $e->getMessage());
             return "Une erreur est survenue lors de la connexion";
         }
     }
-   
+    
+    public function attendre(){
+        require_once  './app/views/enseignent/attendre.php';
+    }
     
     public function logout() {
         session_start();
         session_destroy();
-        header('Location: index.php');
+        header('Location: /login');
         exit();
     }
     

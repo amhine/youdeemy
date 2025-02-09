@@ -1,10 +1,11 @@
 <?php
 
 require_once("./app/libraries/database.php");
+require_once("./DAO/tag.php");
 abstract class Cours {
     protected $conn;
     protected $id_cours;
-    protected $nom_cours;
+    protected $titre;
     protected $date_creation;
     protected $id_categorie;
     protected $id_user;
@@ -14,9 +15,9 @@ abstract class Cours {
     protected $images;
     protected $description;
     
-    public function __construct( $id_cours, $nom_cours, $date_creation, $id_categorie, $id_user, $statut, $fichier, $type_contenu, $images, $description) {
+    public function __construct( $id_cours, $titre, $date_creation, $id_categorie, $id_user, $statut, $fichier, $type_contenu, $images, $description) {
         $this->id_cours = $id_cours;
-        $this->nom_cours = $nom_cours;
+        $this->titre = $titre;
         $this->date_creation = $date_creation;
         $this->id_categorie = $id_categorie;
         $this->id_user = $id_user;
@@ -35,11 +36,11 @@ abstract class Cours {
         $this->id_cours=$id_cours;
     }
     public function getNom() {
-        return $this->nom_cours;  
+        return $this->titre;  
     }
     
-    public function setNom($nom_cours) {
-        $this->nom_cours = $nom_cours;  
+    public function setNom($titre) {
+        $this->titre = $titre;  
     }
 
     public function getDate() {
@@ -95,7 +96,56 @@ abstract class Cours {
     public function setdescription($description) {
         $this->description = $description;
     }
+    public function getcategorie() {
+        return $this->id_categorie;
+    }
 
- 
+    public function setcategorie($id_categorie) {
+        $this->id_categorie = $id_categorie; 
+    }
+    public function getNomCategorie() {
+        $categorieDAO = new CategorieDAO();
+        return $categorieDAO->getCategorieNom($this->id_categorie);
+    }
+    public function getNomTag() {
+        $tagDAO = new TagDAO();
+        $tags = $tagDAO->getTagsByCours($this->id_cours); 
+        if (!empty($tags)) {
+            $tagNames = [];
+            foreach ($tags as $tag) {
+                $tagNames[] = $tag->getNomTag(); 
+            }
+            return implode(", ", $tagNames); 
+        } else {
+            return "Aucun tag associé"; 
+        }
+    }
+
+    
+    
+    
+    
+    
+   
 }
+class CoursDocument extends Cours {
+    public function __construct($id_cours, $titre, $date_creation, $id_categorie, $id_user, $statut, $fichier, $images, $description) {
+        parent::__construct($id_cours, $titre, $date_creation, $id_categorie, $id_user, $statut, $fichier, 'document', $images, $description);
+    }
+
+    public function getFichier() {
+        return $this->fichier;
+    }
+}
+class CoursVideo extends Cours {
+    public function __construct($id_cours, $titre, $date_creation, $id_categorie, $id_user, $statut, $fichier, $images, $description) {
+        
+        parent::__construct($id_cours, $titre, $date_creation, $id_categorie, $id_user, $statut, $fichier, 'video', $images, $description);
+    }
+
+    public function getFichier() {
+        return $this->fichier;
+    }
+}
+
 ?>

@@ -1,45 +1,88 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories - Udemy</title>
+    <title>Document</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Votre navbar reste la même, mais mettez à jour les liens -->
+    <!-- Navbar -->
     <nav class="bg-white mb-8 rounded-xl shadow-lg overflow-hidden transition-all hover:shadow-2xl hover:-translate-y-1">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
                 <div class="flex-shrink-0">
-                    <img src="https://frontends.udemycdn.com/frontends-homepage/staticx/udemy/images/v7/logo-udemy.svg" alt="Udemy" width="75" height="28">
+                    <img src="https://frontends.udemycdn.com/frontends-homepage/staticx/udemy/images/v7/logo-udemy.svg" alt="Udemy" width="75" height="28" loading="lazy" style="vertical-align: middle;">
                 </div>
+                <!-- Nav Links -->
                 <div class="hidden md:flex md:items-center space-x-4">
-                    <a href="/enhome" class="text-gray-800 cursor-pointer hover:purple-800 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                    <a href="/encategorie" class="text-gray-600 cursor-pointer hover:purple-800 px-3 py-2 rounded-md text-sm font-medium">Categories</a>
-                    <a href="/encourses" class="text-gray-600 hover:text-purple-800 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
-                    <a href="/enstatistics" class="text-gray-600 hover:text-purple-800 px-3 py-2 rounded-md text-sm font-medium">Statistiques</a>
+                    <a href="/home" class="text-gray-800 cursor-pointer hover:purple-800 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="/categorie" class="text-gray-600 cursor-pointer hover:purple-800 px-3 py-2 rounded-md text-sm font-medium">Categories</a>
+                    <a href="/courses" class="text-gray-600 hover:text-purple-800 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
                     <a href="/logout" class="text-white hover:text-purple-500 px-4 py-2 rounded bg-purple-600 hover:bg-purple-700">Logout</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="flex flex-wrap justify-center mt-8 mb-8 gap-10">
-        <?php foreach ($categories as $categorie): ?>
-            <a href="/voircategorie/<?php echo $categorie->getIdCategorie(); ?>"
-                class="flex flex-col items-center text-center bg-white shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 w-1 md:w-1/2 lg:w-1/3">
-                <h3 class="text-lg font-bold text-purple-600 mb-2"><?php echo $categorie->getNom(); ?></h3>
-                <p class="text-sm text-gray-600 mb-4"><?php echo $categorie->getDescription(); ?></p>
-                <div class="mt-auto">
-                    <span class="mt-4 block text-blue-600 font-semibold hover:underline">Voir plus</span>
-                </div>
-            </a>
-        <?php endforeach; ?>
-    </div>
+   
 
-     <!-- Footer -->
-     <footer id="fh5co-footer" role="contentinfo" class="bg-cover bg-center text-white bg-purple-700">
+    <!-- Affichage des cours -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 mt-12">
+    <?php if (!empty($cours)): ?>
+        <?php foreach ($cours as $coursItem): ?>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all hover:shadow-2xl hover:-translate-y-1">
+                <div class="relative">
+                    <img src="<?= ($coursItem->getImage()) ?>" alt="Course thumbnail" class="w-full h-48 object-cover">
+                    <div class="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
+                        <?php
+                            $categoryName = $coursItem->getNomCategorie();
+                            echo $categoryName ? $categoryName : 'No Category';
+                        ?>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800"><?= ($coursItem->getNom()) ?></h3>
+                    <p class="text-gray-600 mb-4"><?= ($coursItem->getdescription()) ?></p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <p class="text-sm text-gray-600 mb-4">Tags :
+                            <?php
+                                $tagName = $coursItem->getNomTag(); 
+                                echo $tagName ? $tagName : 'No tag';
+                            ?>
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <a href="/cours/<?= ($coursItem->getIdCours()) ?>">
+                            <button class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700">
+                                Read More
+                            </button>
+                        </a>
+
+                        <a href="/inscription/<?= ($coursItem->getIdCours()) ?>">
+                            <button class="px-6 py-2 border-2 border-purple-600 text-black font-bold bg-white rounded-full hover:bg-purple-600 hover:text-white hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                                Join Course
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p class="text-center text-gray-600">Aucun cours trouvé.</p>
+    <?php endif; ?>
+</div>
+
+
+    
+
+    <!-- Footer -->
+    <footer id="fh5co-footer" role="contentinfo" class="bg-cover bg-center text-white bg-purple-700">
         <div class="container mx-auto  py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                 <!-- About Education Section -->
@@ -107,5 +150,6 @@
             </div>
         </div>
     </footer>
+    
 </body>
 </html>

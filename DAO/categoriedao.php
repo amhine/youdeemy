@@ -12,16 +12,7 @@ class CategorieDAO {
         $this->connect = (new Connexion())->getConnection();
     }
 
-    // public function getCategories() {
-    //     try {
-    //         $sql = "SELECT * FROM categorie";
-    //         $stmt = $this->connect->prepare($sql);
-    //         $stmt->execute();
-    //         return $stmt->fetchAll(PDO::FETCH_OBJ); 
-    //     } catch (PDOException $e) {
-    //         throw new Exception("Erreur lors de la récupération des catégories : " . $e->getMessage());
-    //     }
-    // }
+  
     public function getCategories() {
         try {
             $sql = "SELECT * FROM categorie";
@@ -98,6 +89,24 @@ class CategorieDAO {
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la récupération de la catégorie : " . $e->getMessage());
         }
+    }
+    public function CategorieById($id_categorie) {
+        $query = "SELECT nom_categorie FROM categorie WHERE id_categorie = :id_categorie";
+        $stmt = $this->connect->prepare($query);
+        $stmt->bindParam(':id_categorie', $id_categorie, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->nom_categorie : 'No Category';
+    }
+    public function getCategorieNom($id_categorie) {
+        $query = "SELECT nom_categorie FROM categorie WHERE id_categorie = :id_categorie";
+        
+        $stmt = $this->connect->prepare($query);
+        $stmt->bindParam(':id_categorie', $id_categorie, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        return $result ? $result->nom_categorie : 'No Category';
     }
 }
 ?>

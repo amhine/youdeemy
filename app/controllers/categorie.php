@@ -10,20 +10,45 @@ class CategorieController {
         $this->categorieDAO = new CategorieDAO();
     }
     public function index() {
-        // if (!isset($_SESSION['id_user'])) {
-        //     header("Location: index.php?action=signin");
-        //     exit;
-        // }
-
+        if (!isset($_SESSION['id_user'])) {
+            header("Location: index.php?action=signin");
+            exit;
+        }
+        
+        if ($_SESSION['id_role'] == '2') {  
+            if ($_SERVER['REQUEST_URI'] !== '/categorie') {
+                header("Location: /categorie");
+                exit;
+            }
+        }
+    
         $categories = $this->categorieDAO->getCategories();
-        require_once 'app/views/enseignent/categorie.php';
+        require_once 'app/views/etudient/categorie.php';
     }
+    
+    public function encategorie() {
+        if (!isset($_SESSION['id_user'])) {
+            header("Location: index.php?action=signin");
+            exit;
+        }
+    
+        if ($_SESSION['id_role'] == '3') {  
+            if ($_SERVER['REQUEST_URI'] !== '/encategorie') {
+                header("Location: /encategorie"); 
+                exit;
+            }
+        }
+    
+        $categories = $this->categorieDAO->getCategories();
+        require_once 'app/views/enseignent/categorie.php'; 
+    }
+    
 
     public function details($id) {
-        // if (!isset($_SESSION['id_user'])) {
-        //     header("Location: index.php?action=signin");
-        //     exit;
-        // }
+        if (!isset($_SESSION['id_user'])) {
+            header("Location: index.php?action=signin");
+            exit;
+        }
 
         $categorie = $this->categorieDAO->getCategorieById($id);
         require_once 'app/views/enseignent/detailcategorie.php';

@@ -24,7 +24,7 @@
             </div>
 
             <!-- Form -->
-            <form action="/login" id="" method="POST" class="mt-8 space-y-6">
+            <form action="/login" id="loginForm" method="POST" class="mt-8 space-y-6">
                 <div class="space-y-4">
                     <!-- Email -->
                     <div>

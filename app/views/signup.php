@@ -34,7 +34,7 @@ $roles = $role->getRole();
             </div>
 
             <!-- Form -->
-            <form id="signupForm" action="/register" method="POST" class="mt-8 space-y-6">
+            <form id="signupForm" action="/register" method="GET" class="mt-8 space-y-6">
                 <div class="space-y-4">
                     <!-- Name -->
                     <div>
