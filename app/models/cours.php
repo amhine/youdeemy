@@ -29,7 +29,10 @@ abstract class Cours {
         $this->conn = (new Connexion())->getConnection();
     }
 
-   
+    public function getIdCours() {
+        return $this->id_cours;
+    }
+    
     public function setIdCours($id_cours) {
         $this->id_cours=$id_cours;
     }
@@ -119,7 +122,7 @@ abstract class Cours {
         }
     }
 
-
+    
     
     
     
